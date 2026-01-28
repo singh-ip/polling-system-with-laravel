@@ -1,8 +1,4 @@
-FROM php:8.4-fpm-alpine
-
-RUN docker-php-ext-install pdo pdo_mysql
-
-WORKDIR /var/www/html
+FROM php:8.4-cli-alpine
 
 RUN apk add --no-cache \
     git \
@@ -13,26 +9,26 @@ RUN apk add --no-cache \
     zip \
     unzip
 
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
 
-COPY . /var/www/html
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+
+COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-RUN mkdir -p storage/framework/cache/data \
-    && mkdir -p storage/framework/sessions \
-    && mkdir -p storage/framework/views \
-    && mkdir -p storage/logs \
-    && mkdir -p bootstrap/cache
-
-RUN chown -R www-data:www-data /var/www/html \
+RUN mkdir -p storage/framework/{cache/data,sessions,views} storage/logs bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
 
-CMD php artisan migrate --force && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan serve --host=0.0.0.0 --port=${PORT}
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
