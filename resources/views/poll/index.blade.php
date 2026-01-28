@@ -17,7 +17,29 @@
         .pagination .active span{background:#007bff;color:white;border-color:#007bff}
         .polls-list{margin:20px 0}
     </style>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.11.0/dist/echo.iife.js"></script>
 </head>
+<script>
+Pusher.logToConsole = false;
+
+const echo = new window.Echo({
+    broadcaster: 'pusher',
+    key: '{{ config("broadcasting.connections.pusher.key") }}',
+    wsHost: '{{ config("broadcasting.connections.pusher.options.host") }}',
+    wsPort: '{{ config("broadcasting.connections.pusher.options.port") }}',
+    wssPort: 443,
+    forceTLS: true,
+    enabledTransports: ['ws', 'wss'],
+});
+
+echo.channel('polls').listen('VoteCast', (e) => {
+    const pollEl = document.querySelector(`[data-poll-id="${e.poll_id}"] .votes`);
+    if (pollEl) {
+        pollEl.textContent = e.total_votes;
+    }
+});
+</script>
 <body>
     <div class="header">
         <h1>Polls</h1>
@@ -35,9 +57,9 @@
         @if($polls->count() > 0)
             <ul>
                 @foreach($polls as $poll)
-                    <li>
+                    <li data-poll-id="{{ $poll->id }}">
                         <a href="{{ url('/polls/'.$poll->id) }}">{{ $poll->question }}</a>
-                        — votes: {{ $poll->votes_count }}
+                        — votes: <span class="votes">{{ $poll->votes_count }}</span>
                     </li>
                 @endforeach
             </ul>

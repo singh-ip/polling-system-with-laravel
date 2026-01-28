@@ -24,7 +24,10 @@ final class VoteCast implements ShouldBroadcastNow
 
     public function broadcastOn()
     {
-        return new Channel('poll.' . $this->poll->id);
+        return [
+            new Channel('poll.' . $this->poll->id),
+            new Channel('polls'),
+        ];
     }
 
     public function broadcastWith()
