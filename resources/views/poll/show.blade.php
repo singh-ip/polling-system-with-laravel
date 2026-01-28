@@ -53,7 +53,6 @@
             });
         });
 
-        // Setup Echo with Pusher (works with pusher or laravel-websockets)
         Pusher.logToConsole = false;
         const echo = new window.Echo({
             broadcaster: 'pusher',
