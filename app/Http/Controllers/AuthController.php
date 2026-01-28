@@ -21,6 +21,7 @@ final class AuthController extends Controller
         $credentials = $request->validated();
 
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             if (!auth()->user()->is_admin) {
                 Auth::logout();
                 return back()->with('error', 'Only admins can login.');
@@ -32,9 +33,13 @@ final class AuthController extends Controller
         return back()->with('error', 'Invalid credentials.');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/')->with('success', 'Logged out successfully.');
     }
 }
