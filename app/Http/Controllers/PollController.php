@@ -22,4 +22,14 @@ final class PollController extends Controller
         $polls = $this->service->listPolls();
         return view('poll.index', compact('polls'));
     }
+
+    public function vote(VoteRequest $request, Poll $poll)
+    {
+        try {
+            $this->service->submitVote($poll, (int) $request->input('option_id'), $request->user(), $request->ip());
+            return response()->json(['message' => 'Vote recorded']);
+        } catch (DomainException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+    }
 }
