@@ -36,7 +36,8 @@ RUN chown -R www-data:www-data /var/www/html \
 
 EXPOSE 8080
 
-CMD sh -c php artisan migrate --force && \
+CMD php artisan migrate --force && \
     php artisan config:cache && \
     php artisan route:cache && \
+    (php artisan admin:create "Admin Name" "admin@example.com" "password123" || true) && \
     php artisan serve --host=0.0.0.0 --port=8080
