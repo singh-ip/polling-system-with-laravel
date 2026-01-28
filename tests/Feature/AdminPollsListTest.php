@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Poll;
 use App\Models\PollOption;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,12 +12,20 @@ final class AdminPollsListTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create(['is_admin' => true]);
+    }
+
     public function test_admin_can_view_polls_listing()
     {
         $poll1 = Poll::create(['question' => 'First poll?']);
         $poll2 = Poll::create(['question' => 'Second poll?']);
 
-        $response = $this->get('/polls');
+        $response = $this->actingAs($this->user)->get('/polls');
 
         $response->assertStatus(200);
         $response->assertSee('First poll?');
@@ -29,7 +38,7 @@ final class AdminPollsListTest extends TestCase
         PollOption::create(['poll_id' => $poll->id, 'label' => 'A', 'votes_count' => 10]);
         PollOption::create(['poll_id' => $poll->id, 'label' => 'B', 'votes_count' => 5]);
 
-        $response = $this->get('/polls');
+        $response = $this->actingAs($this->user)->get('/polls');
 
         $response->assertStatus(200);
         $response->assertSee('votes:');
@@ -40,7 +49,7 @@ final class AdminPollsListTest extends TestCase
         $poll = Poll::create(['question' => 'Link test?']);
         PollOption::create(['poll_id' => $poll->id, 'label' => 'X']);
 
-        $response = $this->get('/polls');
+        $response = $this->actingAs($this->user)->get('/polls');
 
         $response->assertStatus(200);
         $response->assertSee('/polls/' . $poll->id);
@@ -48,7 +57,7 @@ final class AdminPollsListTest extends TestCase
 
     public function test_admin_listing_shows_empty_when_no_polls()
     {
-        $response = $this->get('/polls');
+        $response = $this->actingAs($this->user)->get('/polls');
 
         $response->assertStatus(200);
     }
