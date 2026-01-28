@@ -97,21 +97,7 @@ GET  /polls                     - Admin listing (requires auth + admin role)
 
 ---
 
-## Summary
-
-**All specification requirements are fully implemented and documented.** The polling system is production-ready with:
-
-1. ✅ Admin poll creation via CLI
-2. ✅ Public poll display page with shareable links
-3. ✅ Guest & authenticated user voting
-4. ✅ One-vote-per-user/IP enforcement
-5. ✅ Real-time vote count broadcasting via WebSockets
-6. ✅ Client-side Echo listener for live updates
-7. ✅ Admin authentication system with login panel
-8. ✅ Rate limiting on vote submission
-9. ✅ Paginated admin polls listing
-7. ✅ Comprehensive test suite (unit, feature, integration)
-8. ✅ Clear setup documentation and architecture guide
+### 1. Get Started
 
 To get started, follow the **Setup & Run** section below.
 
