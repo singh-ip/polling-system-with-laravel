@@ -21,8 +21,14 @@ COPY . /var/www/html
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+RUN mkdir -p storage/framework/cache/data \
+    && mkdir -p storage/framework/sessions \
+    && mkdir -p storage/framework/views \
+    && mkdir -p storage/logs \
+    && mkdir -p bootstrap/cache
+
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
+    && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8000
 
