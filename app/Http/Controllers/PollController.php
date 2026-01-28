@@ -17,6 +17,12 @@ final class PollController extends Controller
         $this->service = $service;
     }
 
+    public function show(Poll $poll)
+    {
+        $poll = $this->service->getPollWithOptions($poll);
+        return view('poll.show', compact('poll'));
+    }
+
     public function index()
     {
         $polls = $this->service->listPolls();
