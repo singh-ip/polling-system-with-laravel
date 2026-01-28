@@ -41,5 +41,27 @@ services:
     ports:
       - "3306:3306"
 
+  soketi:
+    image: quay.io/soketi/soketi:latest
+    container_name: laravel_soketi
+    ports:
+      - "6001:6001"
+    environment:
+      DEBUG: "1"
+      SOKETI_DEBUG: "1"
+      SOKETI_APP_MANAGER_DRIVER: "array"
+      SOKETI_APP_MANAGER_ARRAY_APPS: '[{"id":"local","key":"local","secret":"local","maxConnections":null,"enableUserAuthentication":false}]'
+      SOKETI_DEFAULT_APP_ID: "local"
+      SOKETI_DEFAULT_APP_KEY: "local"
+      SOKETI_DEFAULT_APP_SECRET: "local"
+
+  adminer:
+    image: adminer:latest
+    container_name: laravel_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
 volumes:
   dbdata:
