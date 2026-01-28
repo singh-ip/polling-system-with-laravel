@@ -261,3 +261,23 @@ PUSHER_USE_TLS=false
 ### "You have already voted" error
 
 This is expected behavior — each user/IP can vote once per poll. To vote again, use incognito/different browser or clear cookies.
+
+### Production Deployment (Railway)
+
+This project is designed to run on Railway using Docker.
+
+### SSH into Railway CLI
+
+```
+npm install -g @railway/cli
+railway login
+railway link
+```
+
+**SSH into the running container**
+
+```
+railway ssh
+```
+
+Then run the commands as usual "php artisan ......"
