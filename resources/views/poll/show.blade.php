@@ -58,8 +58,8 @@
             broadcaster: 'pusher',
             key: '{{ config("broadcasting.connections.pusher.key") ?? env("PUSHER_APP_KEY") }}',
             cluster: '{{ config("broadcasting.connections.pusher.options.cluster") ?? env("PUSHER_APP_CLUSTER") }}',
-            wsHost: '127.0.0.1',
-            wsPort: 6001,
+            wsHost: '{{ config("broadcasting.connections.pusher.options.host") ?? env("PUSHER_HOST") }}',
+            wsPort: '{{ config("broadcasting.connections.pusher.options.port") ?? env("PUSHER_PORT") }}',
             forceTLS: false,
             disableStats: true,
             enabledTransports: ['ws', 'wss']
