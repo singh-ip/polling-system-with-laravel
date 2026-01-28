@@ -8,7 +8,7 @@ use App\Models\PollOption;
 use App\Models\Vote;
 use App\Models\User;
 use DomainException;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 final class PollService
 {
@@ -17,9 +17,9 @@ final class PollService
         return $poll->load('options');
     }
 
-    public function listPolls(): Collection
+    public function listPolls(int $perPage = 10): LengthAwarePaginator
     {
-        return Poll::withCount('votes')->with('options')->get();
+        return Poll::withCount('votes')->with('options')->orderByDesc('created_at')->paginate($perPage);
     }
 
     public function submitVote(Poll $poll, int $optionId, ?User $user, string $ip): Vote
