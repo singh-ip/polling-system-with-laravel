@@ -36,7 +36,7 @@ const echo = new window.Echo({
 echo.channel('polls').listen('VoteCast', (e) => {
     const pollEl = document.querySelector(`[data-poll-id="${e.poll_id}"] .votes`);
     if (pollEl) {
-        pollEl.textContent = e.total_votes;
+        pollEl.textContent = (e.votes_count !== undefined) ? e.votes_count : e.total_votes;
     }
 });
 </script>
